@@ -18,14 +18,30 @@ function git {
 # check for print statements that are being introduced
 function __gpc_git_check {
   local totalAmount=0
-  local s
-  for s in "${PRINT_STATEMENTS[@]}"; do
-    local printStatement=$("$gitCommand" diff | grep "$s")
-    if [ ${#printStatement} == 0 ]; then
-      continue
-    fi
-    local amount=$(echo "$printStatement" | wc -l)
-    totalAmount=$((totalAmount + amount))
-  done
-  printf 'Found %d print statement%s\n' $totalAmount $([ "$totalAmount" != 1 ] && echo 's')
+  local output
+  local addedFileName
+  local tempDiff=$("$gitCommand" diff)
+  (
+    IFS=$'\n'
+    for line in $tempDiff; do
+      if [[ $line =~ ^\+\+\+ ]]; then
+        file=$(echo "${line#*/}")
+        addedFileName=false
+      else
+        for s in "${PRINT_STATEMENTS[@]}"; do
+          if [ $(echo "$line" | grep $s) ]; then
+            if [ $addedFileName == false ]; then
+              output="$output\n$file\n"
+              addedFileName=true
+            fi
+            output="$output$line\n"
+            totalAmount=$((totalAmount + 1))
+          fi
+        done
+      fi
+    done
+
+    printf 'Found %d print statement%s\n' $totalAmount $([ "$totalAmount" != 1 ] && echo 's')
+    printf "$output"
+  )
 }
