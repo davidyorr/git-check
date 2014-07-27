@@ -20,22 +20,33 @@ function __gpc_git_check {
   local totalAmount=0
   local output
   local addedFileName
-  local tempDiff=$("$gitCommand" diff)
+  local currLineNum
+  local diffOutput=$("$gitCommand" diff)
   (
+    # allows diffOutput to be read line by line, separated by '\n'
     IFS=$'\n'
-    for line in $tempDiff; do
+    for line in $diffOutput; do
+      # iterate the currLineNum
+      if [ ${line:0:1} != "-" ] && [ $line != "\\ No newline at end of file" ]; then
+        ((currLineNum++))
+      fi
+      # get the starting line number
+      if [[ $line =~ ^\@\@ ]]; then
+        currLineNum=$(echo "$line" | grep -o -P '(?<=\+)[0-9]*(?=,)')
+        ((currLineNum--))
+      fi
       if [[ $line =~ ^\+\+\+ ]]; then
-        file=$(echo "${line#*/}")
+        fileName=$(echo "${line#*/}")
         addedFileName=false
       else
         for s in "${PRINT_STATEMENTS[@]}"; do
           if [ $(echo "$line" | grep $s) ]; then
             if [ $addedFileName == false ]; then
-              output="$output\n$file\n"
+              output="$output\n$fileName\n"
               addedFileName=true
             fi
-            output="$output$line\n"
-            totalAmount=$((totalAmount + 1))
+            output="$output$currLineNum: $line\n"
+            ((totalAmount++))
           fi
         done
       fi
