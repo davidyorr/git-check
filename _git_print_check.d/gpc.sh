@@ -45,7 +45,7 @@ function __gpc_git_check {
               output="$output\n$fileName\n"
               addedFileName=true
             fi
-            output="$output$currLineNum: $line\n"
+            output=$(printf '%s%6s: %s' "$output" "$currLineNum" "$line\n")
             ((totalAmount++))
           fi
         done
