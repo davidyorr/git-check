@@ -10,6 +10,13 @@ function git {
 
   if [ $command == "check" ]; then
     __gpc_git_check
+  elif [[ "${RUN_BEFORE[*]}" == *"${command}"* ]]; then
+    output=$(__gpc_git_check)
+    if [[ ! "$output" =~ ^Found\ 0 ]]; then
+      printf "$output\n"
+    else
+      "$gitCommand" "$@"
+    fi
   else
     "$gitCommand" "$@"
   fi
@@ -40,7 +47,7 @@ function __gpc_git_check {
         addedFileName=false
       else
         for s in "${PRINT_STATEMENTS[@]}"; do
-          if [ $(echo "$line" | grep $s) ]; then
+          if [ $(echo "$line" | grep $s) ] && [ ${line:0:1} == "+" ]; then
             if [ $addedFileName == false ]; then
               output="$output\n$fileName\n"
               addedFileName=true
