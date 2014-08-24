@@ -25,7 +25,7 @@ function git {
 # check for print statements that are being introduced
 function __gpc_git_check {
   local totalAmount=0
-  local output
+  local output=()
   local addedFileName
   local currLineNum
   local diffOutput=$("$gitCommand" diff)
@@ -52,7 +52,7 @@ function __gpc_git_check {
               output="$output\n$fileName\n"
               addedFileName=true
             fi
-            output=$(printf '%s%6s: %s' "$output" "$currLineNum" "$line\n")
+            output+=($(printf '%6s: %s' "$currLineNum" "$line"))
             ((totalAmount++))
           fi
         done
@@ -60,6 +60,8 @@ function __gpc_git_check {
     done
 
     printf 'Found %d print statement%s\n' $totalAmount $([ "$totalAmount" != 1 ] && echo 's')
-    printf "$output"
+    for line in "${output[@]}"; do
+      echo $line
+    done
   )
 }
