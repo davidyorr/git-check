@@ -49,7 +49,8 @@ function __gpc_git_check {
         for s in "${PRINT_STATEMENTS[@]}"; do
           if [ $(echo "$line" | grep $s) ] && [ ${line:0:1} == "+" ]; then
             if [ $addedFileName == false ]; then
-              output="$output\n$fileName\n"
+              output+=($(printf " "))
+              output+=($(printf '%s' "$fileName"))
               addedFileName=true
             fi
             output+=($(printf '%6s: %s' "$currLineNum" "$line"))
