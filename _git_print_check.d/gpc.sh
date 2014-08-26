@@ -13,7 +13,9 @@ function git {
   elif [[ "${RUN_BEFORE[*]}" == *"${command}"* ]]; then
     output=$(__gpc_git_check)
     if [[ ! "$output" =~ ^Found\ 0 ]]; then
-      printf "$output\n"
+cat << EOF
+$output
+EOF
     else
       "$gitCommand" "$@"
     fi
