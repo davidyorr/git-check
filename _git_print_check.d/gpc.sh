@@ -4,7 +4,7 @@
 source ~/.git_print_check.d/gpc.conf
 
 # override the git command
-function git {
+git () {
 	local command=$1
 	local gitCommand=`which git`
 
@@ -25,7 +25,7 @@ EOF
 }
 
 # check for print statements that are being introduced
-function __gpc_git_check {
+__gpc_git_check () {
 	local totalAmount=0
 	local output=()
 	local addedFileName
