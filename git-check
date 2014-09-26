@@ -22,7 +22,7 @@ run_check () {
 				curr_line_num=$(echo "$line" | grep -o -P '(?<=\+)[0-9]*(?=,)')
 				curr_line_num=$((curr_line_num-1))
 			fi
-			if [ "$(echo $line | cut -c1-3)" = "+++" ]; then
+			if [ "$(echo $line | head -c3)" = "+++" ]; then
 				filename=$(echo "${line#*/}")
 				added_filename=false
 			else
