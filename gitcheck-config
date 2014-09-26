@@ -1,10 +1,2 @@
-# gpc.conf
-
-PRINT_STATEMENTS=(
-  'System.out.print'
-  'console.log'
-)
-
-RUN_BEFORE=(
-  'add'
-)
+[gitcheck]
+	statements = System.out.print console.log
