@@ -3,27 +3,6 @@
 # read config variables
 source ~/.git_print_check.d/gpc.conf
 
-# override the git command
-git () {
-	local command=$1
-	local gitCommand=`which git`
-
-	if [ $command == "check" ]; then
-		__gpc_git_check
-	elif [[ "${RUN_BEFORE[*]}" == *"${command}"* ]]; then
-		output=$(__gpc_git_check)
-		if [[ ! "$output" =~ ^Found\ 0 ]]; then
-cat << EOF
-$output
-EOF
-		else
-			"$gitCommand" "$@"
-		fi
-	else
-		"$gitCommand" "$@"
-	fi
-}
-
 # check for print statements that are being introduced
 __gpc_git_check () {
 	local totalAmount=0
