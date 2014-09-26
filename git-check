@@ -7,46 +7,45 @@ run_check () {
 	total_amount=0
 	set added_filename
 	set curr_line_num
-	set diff_output=$(git diff)
+	diff_output=$(git diff)
 	(
-		# allows diff_output to be read line by line, separated by '\n'
-		IFS=$'\n'
+		# allows diff_output to be read line by line, separated by "\n"
+		IFS="
+		"
 		for line in $diff_output; do
 			# iterate the curr_line_num
-			if [ ${line:0:1} != "-" ] && [ $line != "\\ No newline at end of file" ]; then
+			if [ "$(echo "$line" | head -c1)" != "-" ] && [ $line != "\\ No newline at end of file" ]; then
 				curr_line_num=$((curr_line_num+1))
 			fi
 			# get the starting line number
-			if [[ $line =~ ^\@\@ ]]; then
+			if [ "$(echo "$line" | head -c2)" = "@@" ]; then
 				curr_line_num=$(echo "$line" | grep -o -P '(?<=\+)[0-9]*(?=,)')
 				curr_line_num=$((curr_line_num-1))
 			fi
-			if [[ $line =~ ^\+\+\+ ]]; then
+			if [ "$(echo $line | cut -c1-3)" = "+++" ]; then
 				filename=$(echo "${line#*/}")
 				added_filename=false
 			else
-				for s in "${PRINT_STATEMENTS[@]}"; do
-					echo $s
-					if [ $(echo "$line" | grep $s) ] && [ ${line:0:1} == "+" ]; then
-						if [ $added_filename == false ]; then
-							#output+=($(printf " "))
-							#output+=($(printf '%s' "$filename"))
-							printf '%s' "$filename"
+				# read print_statements separated by " "
+				IFS=" "
+				for s in $print_statements; do
+					if [ "$(echo "$line" | grep $s)" ] && [ "$(echo "$line" | head -c1)" = "+" ]; then
+						if [ "$added_filename" = false ]; then
+							printf '\n%s\n' "$filename"
 							added_filename=true
 						fi
 						#output+=($(printf '%6s: %s' "$curr_line_num" "$line"))
-						printf '%6s: %s' "$curr_line_num" "$line"
+						printf '%6s: %s\n' "$curr_line_num" "$line"
 						total_amount=$((total_amount+1))
 					fi
 				done
+				# go back to reading diff_output by "\n"
+				IFS="
+				"
 			fi
 		done
 
-		echo "$total_amount"
-		printf 'Found %d print statement%s\n' $total_amount $([ "$total_amount" != 1 ] && echo 's')
-		#for line in "${output[@]}"; do
-		#	echo $line
-		#done
+		printf '\nFound %d print statement%s\n' $total_amount $([ "$total_amount" != 1 ] && echo 's')
 	)
 
 	unset total_amount
