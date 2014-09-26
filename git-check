@@ -1,49 +1,58 @@
-# gpc.sh
+#!/bin/sh
 
-# read config variables
-source ~/.git_print_check.d/gpc.conf
+print_statements=$(git config "gitcheck.statements")
 
 # check for print statements that are being introduced
-__gpc_git_check () {
-	local totalAmount=0
-	local output=()
-	local addedFileName
-	local currLineNum
-	local diffOutput=$("$gitCommand" diff)
+run_check () {
+	total_amount=0
+	set added_filename
+	set curr_line_num
+	set diff_output=$(git diff)
 	(
-		# allows diffOutput to be read line by line, separated by '\n'
+		# allows diff_output to be read line by line, separated by '\n'
 		IFS=$'\n'
-		for line in $diffOutput; do
-			# iterate the currLineNum
+		for line in $diff_output; do
+			# iterate the curr_line_num
 			if [ ${line:0:1} != "-" ] && [ $line != "\\ No newline at end of file" ]; then
-				((currLineNum++))
+				curr_line_num=$((curr_line_num+1))
 			fi
 			# get the starting line number
 			if [[ $line =~ ^\@\@ ]]; then
-				currLineNum=$(echo "$line" | grep -o -P '(?<=\+)[0-9]*(?=,)')
-				((currLineNum--))
+				curr_line_num=$(echo "$line" | grep -o -P '(?<=\+)[0-9]*(?=,)')
+				curr_line_num=$((curr_line_num-1))
 			fi
 			if [[ $line =~ ^\+\+\+ ]]; then
-				fileName=$(echo "${line#*/}")
-				addedFileName=false
+				filename=$(echo "${line#*/}")
+				added_filename=false
 			else
 				for s in "${PRINT_STATEMENTS[@]}"; do
+					echo $s
 					if [ $(echo "$line" | grep $s) ] && [ ${line:0:1} == "+" ]; then
-						if [ $addedFileName == false ]; then
-							output+=($(printf " "))
-							output+=($(printf '%s' "$fileName"))
-							addedFileName=true
+						if [ $added_filename == false ]; then
+							#output+=($(printf " "))
+							#output+=($(printf '%s' "$filename"))
+							printf '%s' "$filename"
+							added_filename=true
 						fi
-						output+=($(printf '%6s: %s' "$currLineNum" "$line"))
-						((totalAmount++))
+						#output+=($(printf '%6s: %s' "$curr_line_num" "$line"))
+						printf '%6s: %s' "$curr_line_num" "$line"
+						total_amount=$((total_amount+1))
 					fi
 				done
 			fi
 		done
 
-		printf 'Found %d print statement%s\n' $totalAmount $([ "$totalAmount" != 1 ] && echo 's')
-		for line in "${output[@]}"; do
-			echo $line
-		done
+		echo "$total_amount"
+		printf 'Found %d print statement%s\n' $total_amount $([ "$total_amount" != 1 ] && echo 's')
+		#for line in "${output[@]}"; do
+		#	echo $line
+		#done
 	)
+
+	unset total_amount
+	unset added_filename
+	unset curr_line_num
+	unset diff_output
 }
+
+run_check
