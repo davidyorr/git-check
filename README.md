@@ -1,11 +1,14 @@
-git print check
+git check
 ===============
 Check your code for print statements before committing.
 
 Installation
 ------------
-Make install.sh executable, and then run it.
 
->`chmod +x install.sh && ./install.sh`
+### wget
 
-The install script moves `_git_print_check.d` to `~/.git_print_check.d` and adds the contents of `_bashrc` to `~/.bashrc`.
+    wget -qO- https://raw.githubusercontent.com/davidyorr/git-print-check/master/gitcheck-installer.sh | sudo bash
+
+### curl
+
+    curl -s https://raw.githubusercontent.com/davidyorr/git-print-check/master/gitcheck-installer.sh | sudo bash
