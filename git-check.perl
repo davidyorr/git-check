@@ -41,7 +41,7 @@ sub main {
 		}
 	}
 
-	printf "Found %d print statments\n", $total_amount;
+	printf "Found %d print statment%s\n", $total_amount, "$total_amount" != 1 ? "s" : "";
 	foreach my $line (@output) {
 		print "$line\n";
 	}
