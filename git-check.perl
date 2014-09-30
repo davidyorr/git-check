@@ -31,17 +31,17 @@ sub main {
 				if ($line =~ /$print_statement/ && $line =~ /\+/) {
 					if (!$added_filename) {
 						push (@output, "");
-						push (@output, "$filename");
+						push (@output, $filename);
 						$added_filename = 1;
 					}
-					push (@output, sprintf("%6s: %s", "$curr_line_num", "$line"));
+					push (@output, sprintf("%6s: %s", $curr_line_num, $line));
 					$total_amount++;
 				}
 			}
 		}
 	}
 
-	printf "Found %d print statment%s\n", $total_amount, "$total_amount" != 1 ? "s" : "";
+	printf "Found %d print statment%s\n", $total_amount, $total_amount != 1 ? "s" : "";
 	foreach my $line (@output) {
 		print "$line\n";
 	}
