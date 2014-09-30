@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my $print_statements_str = `git config "gitcheck.statements"`;
+my $print_statements_str = `git config --get-all gitcheck.statements`;
 
 sub main {
 	my @output;
