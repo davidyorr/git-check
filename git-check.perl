@@ -21,14 +21,14 @@ sub main {
 			$line =~ /\+([0-9]+)\,/;
 			$curr_line_num = $1 - 1;
 		}
-		if ($line =~ /\+\+\+/) {
+		if ($line =~ /^\+\+\+/) {
 			$line =~ /\/(.+)/;
 			$filename = $1;
 			$added_filename = 0;
 		} else {
 			my @print_statements = split(" ", $print_statements_str);
 			foreach my $print_statement (@print_statements) {
-				if ($line =~ /$print_statement/ && $line =~ /\+/) {
+				if ($line =~ /$print_statement/ && $line =~ /^\+/) {
 					if (!$added_filename) {
 						push (@output, "");
 						push (@output, $filename);
