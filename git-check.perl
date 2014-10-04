@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my $print_statements_str = `git config --get-all gitcheck.statements`;
+my $gitcheck_statements_str = `git config --get-all gitcheck.statements`;
 
 sub main {
 	my @output;
@@ -27,10 +27,10 @@ sub main {
 			$filename = $1;
 			$added_filename = 0;
 		} else {
-			my @print_statements = split(" ", $print_statements_str);
+			my @gitcheck_statements = split(" ", $gitcheck_statements_str);
 			$added_statement = 0;
-			foreach my $print_statement (@print_statements) {
-				if (!$added_statement && $line =~ /^\+/ && $line =~ /$print_statement/) {
+			foreach my $gitcheck_statement (@gitcheck_statements) {
+				if (!$added_statement && $line =~ /^\+/ && $line =~ /$gitcheck_statement/) {
 					if (!$added_filename) {
 						push (@output, "");
 						push (@output, $filename);
