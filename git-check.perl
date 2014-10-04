@@ -30,7 +30,7 @@ sub main {
 			my @print_statements = split(" ", $print_statements_str);
 			$added_statement = 0;
 			foreach my $print_statement (@print_statements) {
-				if (!$added_statement && $line =~ /$print_statement/ && $line =~ /^\+/) {
+				if (!$added_statement && $line =~ /^\+/ && $line =~ /$print_statement/) {
 					if (!$added_filename) {
 						push (@output, "");
 						push (@output, $filename);
