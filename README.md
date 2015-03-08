@@ -5,13 +5,8 @@ Check your code for unwanted statements that are being introduced.
 Installation
 ------------
 
-### wget
-
-    wget -qO- https://raw.githubusercontent.com/davidyorr/git-print-check/master/gitcheck-installer.sh | sudo bash
-
-### curl
-
-    curl -s https://raw.githubusercontent.com/davidyorr/git-print-check/master/gitcheck-installer.sh | sudo bash
+    $ git clone git clone git://github.com/davidyorr/git-check.git
+    $ make install
 
 Configuration
 -------------
