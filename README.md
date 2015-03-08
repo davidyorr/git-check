@@ -5,7 +5,7 @@ Check your code for unwanted statements that are being introduced.
 Installation
 ------------
 
-    $ git clone git clone git://github.com/davidyorr/git-check.git
+    $ git clone git://github.com/davidyorr/git-check.git
     $ make install
 
 Configuration
