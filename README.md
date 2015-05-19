@@ -16,4 +16,4 @@ Override and set which statement/s to search for:
 
 Add statement/s without overriding:
 
-    git config --global --add "<statement> <or> <statements>"
+    git config --global --add gitcheck.statements "<statement> <or> <statements>"
