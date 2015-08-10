@@ -12,7 +12,7 @@ sub main {
 	my $added_statement;
 	my $curr_line_num;
 	my $filename;
-	my $diff_output = `git diff`;
+	my $diff_output = `git diff HEAD`;
 	my @lines = split /\n/, $diff_output;
 	foreach my $line (@lines) {
 		if ($line !~ /^\-/ && $line ne "\\ No newline at end of file") {
