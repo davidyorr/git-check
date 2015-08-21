@@ -48,7 +48,10 @@ sub main {
 	foreach my $line (@output) {
 		print "$line\n";
 	}
+	return $total_amount;
 }
 
-main();
+my $ret_code = main();
+
+exit($ret_code);
 
