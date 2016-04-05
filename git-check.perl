@@ -4,6 +4,10 @@ use strict;
 use warnings;
 
 my $unwanted_statements_str = `git config --get-all gitcheck.statements`;
+my $highlight_color = "\033[33m\033[1m";
+my $highlight_color_length = length($highlight_color);
+my $highlight_reset = "\033[0m";
+my $highlight_reset_length = length($highlight_reset);
 
 sub main {
 	my @output;
@@ -36,7 +40,14 @@ sub main {
 						push (@output, $filename);
 						$added_filename = 1;
 					}
-					push (@output, sprintf("%6s: %s", $curr_line_num, $line));
+					my $match = $line;
+					my $offset = 0;
+					while ($line =~ /$unwanted_statement/g) {
+						substr($match,$+[0]+$offset,0,$highlight_reset);
+						substr($match,$-[0]+$offset,0,$highlight_color);
+						$offset += $highlight_reset_length + $highlight_color_length;
+					}
+					push (@output, sprintf("%6s: %s", $curr_line_num, $match));
 					$total_amount++;
 					$added_statement = 1;
 				}
