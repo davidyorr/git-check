@@ -1,2 +1,3 @@
 [gitcheck]
-	statements = System.out.print console.log
+	statements = System.out.print
+	statements = System.out.err
