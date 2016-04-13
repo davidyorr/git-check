@@ -1,0 +1,22 @@
+#!/bin/sh
+
+git check
+
+if [ $? -eq 0 ]; then
+	exit 0
+fi
+
+exec < /dev/tty
+
+echo ""
+while true; do
+	read -p "Continue with commit? (Y/n) " yn
+	if [ "$yn" = "" ]; then
+		yn='N'
+	fi
+	case $yn in
+		[Yy] ) break;;
+		[Nn] ) exit 1;;
+		* ) exit 1;;
+	esac
+done
