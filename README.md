@@ -5,15 +5,31 @@ Check your code for unwanted statements that are being introduced.
 Installation
 ------------
 
-    $ git clone git://github.com/davidyorr/git-check.git
-    $ make install
+````console
+$ git clone git://github.com/davidyorr/git-check.git
+$ cd git-check
+$ make install
+````
 
 Configuration
 -------------
-Override and set which statement/s to search for:
 
-    git config --global --replace-all gitcheck.statements "<statements> <separated> <by> <space>"
+Globally add a statement (`System.out.print` in this example) to search for:
 
-Add statement/s without overriding:
+````console
+$ git config --global --add gitcheck.statements System.out.print
+````
 
-    git config --global --add gitcheck.statements "<statement> <or> <statements>"
+Add a statement (`System.out.err`) to the current repository:
+
+````console
+$ git config --add gitcheck.statements System.out.err
+````
+
+Or add them to your global `~/.gitconfig` or repository specific `.git/config` file:
+
+````ini
+[gitcheck]
+    statements = System.out.print
+    statements = System.out.err
+````
